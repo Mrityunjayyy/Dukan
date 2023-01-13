@@ -571,6 +571,4 @@ class fireStoreClass {
 
         }
     }
-
-
 }

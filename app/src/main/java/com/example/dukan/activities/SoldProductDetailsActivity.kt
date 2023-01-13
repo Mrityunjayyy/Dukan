@@ -53,6 +53,7 @@ class SoldProductDetailsActivity : AppCompatActivity() {
             productDetails.image,
             iv_product_item_image
         )
+
         tv_product_item_name.text = productDetails.title
         tv_product_item_price.text ="\u20B9${productDetails.price}"
         tv_sold_product_quantity.text = productDetails.sold_quantity
