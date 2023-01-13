@@ -12,6 +12,8 @@ object Constants {
     // collection in cloud Firebase
     const val USERS: String = "users"
     const val PRODUCTS : String = "products"
+    const val ORDERS : String = "orders"
+    const val CART_ITEMS : String = "cart_items"
 
 
     const val MYSHOPPAL_PREFERENCES: String = "MyShopPalPrefs"
@@ -42,7 +44,7 @@ object Constants {
 
     const val DEFAULT_CART_QUANTITY : String  = "1"
 
-    const val CART_ITEMS : String = "cart_items"
+
 
     const val PRODUCT_ID : String = "product_id"
 
@@ -57,6 +59,9 @@ object Constants {
     const val EXTRA_ADDRESS_DETAILS : String = "AddressDetails"
     const val EXTRA_SELECT_ADDRESS : String = "extra_select_address"
     const val ADD_ADDRESS_REQUEST_CODE : Int = 1211
+    const val EXTRA_SELECTED_ADDRESS : String = "extra_selected_address"
+
+
 
 
 

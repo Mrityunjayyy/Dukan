@@ -14,7 +14,8 @@ import com.example.dukan.utils.Constants
 import com.example.dukan.utils.GlideLoader
 import kotlinx.android.synthetic.main.item_cart_layout.view.*
 
-open class CartItemsListAdapter(private val context : Context , private var items : ArrayList<CartItem>) :RecyclerView.Adapter<CartItemsListAdapter.ViewHolder>() {
+open class CartItemsListAdapter(private val context : Context , private var items : ArrayList<CartItem> , private val updateCartItems : Boolean)
+    :RecyclerView.Adapter<CartItemsListAdapter.ViewHolder>() {
 
     inner class ViewHolder(view : View) : RecyclerView.ViewHolder(view)
 
@@ -39,6 +40,13 @@ open class CartItemsListAdapter(private val context : Context , private var item
                     holder.itemView.ib_remove_cart_item.visibility = View.GONE
                     holder.itemView.ib_add_cart_item.visibility = View.GONE
 
+                    if(updateCartItems){
+                        holder.itemView.ib_delete_cart_item.visibility = View.VISIBLE
+                    } else {
+                        holder.itemView.ib_delete_cart_item.visibility = View.GONE
+
+                    }
+
                     holder.itemView.tv_cart_quantity.text =
                         context.resources.getString(R.string.lbl_out_of_stock)
 
@@ -49,8 +57,17 @@ open class CartItemsListAdapter(private val context : Context , private var item
                         )
                     )
                 } else {
-                    holder.itemView.ib_remove_cart_item.visibility = View.VISIBLE
-                    holder.itemView.ib_add_cart_item.visibility = View.VISIBLE
+
+                    if(updateCartItems) {
+                        holder.itemView.ib_remove_cart_item.visibility = View.VISIBLE
+                        holder.itemView.ib_add_cart_item.visibility = View.VISIBLE
+                        holder.itemView.ib_delete_cart_item.visibility = View.VISIBLE
+                    } else{
+                        holder.itemView.ib_remove_cart_item.visibility = View.GONE
+                        holder.itemView.ib_add_cart_item.visibility = View.GONE
+                        holder.itemView.ib_delete_cart_item.visibility = View.GONE
+                    }
+
 
                     holder.itemView.tv_cart_quantity.setTextColor(
                         ContextCompat.getColor(

@@ -2,7 +2,6 @@ package com.example.dukan.firestore
 
 import android.app.Activity
 import android.content.Context
-import android.content.LocusId
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
@@ -10,15 +9,11 @@ import androidx.fragment.app.Fragment
 import com.example.dukan.activities.*
 import com.example.dukan.fragments.DashboardFragment
 import com.example.dukan.fragments.ProductsFragment
-import com.example.dukan.models.Address
-import com.example.dukan.models.CartItem
-import com.example.dukan.models.Product
-import com.example.dukan.models.User
+import com.example.dukan.models.*
 import com.example.dukan.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -306,12 +301,20 @@ class fireStoreClass {
                    is CartListActivity -> {
                        activity.successCartItemsList(list)
                    }
+
+                   is CheckoutActivity -> {
+                       activity.successCartItemsList(list)
+                   }
                }
 
            }.addOnFailureListener { exception ->
 
                when(activity) {
                    is CartListActivity -> {
+                       activity.hideProgressDialog()
+                   }
+
+                   is CheckoutActivity -> {
                        activity.hideProgressDialog()
                    }
                }
@@ -322,7 +325,7 @@ class fireStoreClass {
    }
 
 
-    fun getAllProductList(activity : CartListActivity){
+    fun getAllProductList(activity : Activity){
         mFireStore.collection(Constants.PRODUCTS)
             .get()
             .addOnSuccessListener { document ->
@@ -336,12 +339,17 @@ class fireStoreClass {
 
                     productList.add(product)
                 }
+                    when(activity) {
+                     is CartListActivity -> {   activity.successProductListsFromFireStore(productList) }
 
-                activity.successProductListsFromFireStore(productList)
-
+                        is CheckoutActivity -> {
+                            activity.successProductListFromFireStore(productList)
+                        }
+                    }
             }.addOnFailureListener { exception ->
-
-                    activity.hideProgressDialog()
+                when(activity) {
+                    is CartListActivity -> {  activity.hideProgressDialog() }
+                }
             Log.e(javaClass.simpleName , exception.message , exception)
 
         }
@@ -455,6 +463,19 @@ class fireStoreClass {
                 activity.hideProgressDialog()
                 Log.e(javaClass.simpleName , exception.message , exception)
             }
+    }
+
+    fun placeOrder(activity : CheckoutActivity , order : Order){
+            mFireStore.collection(Constants.ORDERS)
+                .document()
+                .set(order , SetOptions.merge())
+                .addOnSuccessListener {
+                    activity.orderPlacedSuccess()
+
+                } .addOnFailureListener { exception ->
+                    activity.hideProgressDialog()
+                    Log.e(javaClass.simpleName , exception.message , exception)
+                }
     }
 
 }

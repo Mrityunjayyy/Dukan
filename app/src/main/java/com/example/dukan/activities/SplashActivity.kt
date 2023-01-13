@@ -38,9 +38,13 @@ class SplashActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         Handler().postDelayed(
             {
+                if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    val intent  = Intent(this@SplashActivity , DashboardActivity::class.java)
+                    startActivity(intent)
+                } else { startActivity(Intent(this@SplashActivity , LoginActivity::class.java))
+                    finish() }
 
-                startActivity(Intent(this@SplashActivity , LoginActivity::class.java))
-                finish()
+
             },
             2500
         )

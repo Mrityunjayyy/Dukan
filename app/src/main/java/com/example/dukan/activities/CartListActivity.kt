@@ -68,7 +68,7 @@ class CartListActivity : BaseActivity() {
             ll_checkout.visibility = View.VISIBLE
             tv_no_cart_item_found.visibility = View.GONE
 
-            val itemAdapter = CartItemsListAdapter(this@CartListActivity , cartList)
+            val itemAdapter = CartItemsListAdapter(this@CartListActivity , mCartListItems , true)
             rv_cart_items_list.layoutManager = LinearLayoutManager(this)
             rv_cart_items_list.setHasFixedSize(true)
             rv_cart_items_list.adapter =itemAdapter

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dukan.R
 import com.example.dukan.activities.AddEditAddressActivity
+import com.example.dukan.activities.CheckoutActivity
 import com.example.dukan.models.Address
 import com.example.dukan.utils.Constants
 import kotlinx.android.synthetic.main.item_address_layout.view.*
@@ -35,7 +36,10 @@ class AddressListAdapter(private val context  : Context , private val items : Ar
 
             if(selectAddress) {
                 holder.itemView.setOnClickListener{
-                    Toast.makeText(context , "Selected address : ${model.address} , ${model.zipCode}" , Toast.LENGTH_LONG).show()
+                   // Toast.makeText(context , "Selected address : ${model.address} , ${model.zipCode}" , Toast.LENGTH_LONG).show()
+                    val intent = Intent(context , CheckoutActivity::class.java)
+                    intent.putExtra(Constants.EXTRA_SELECTED_ADDRESS , model)
+                    context.startActivity(intent)
                 }
             }
         }
