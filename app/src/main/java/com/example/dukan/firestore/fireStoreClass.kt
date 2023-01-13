@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.dukan.activities.*
 import com.example.dukan.fragments.DashboardFragment
+import com.example.dukan.fragments.OrdersFragment
 import com.example.dukan.fragments.ProductsFragment
 import com.example.dukan.models.*
 import com.example.dukan.utils.Constants
@@ -478,4 +479,72 @@ class fireStoreClass {
                 }
     }
 
+
+    fun updateAllDetails(activity : CheckoutActivity ,cartList : ArrayList<CartItem> , order : Order) {
+        val writeBatch = mFireStore.batch()
+
+        for ( cartItem in cartList) {
+ //           val productHashMap = HashMap<String, Any>()
+
+//            productHashMap[Constants.STOCK_QUANTITY] =
+//                (cartItem.stock_quantity.toInt() - cartItem.cart_quantity.toInt()).toString()
+
+            val soldProduct = SoldProduct(
+                cartItem.product_owner_id,
+                cartItem.title ,
+                cartItem.price ,
+                cartItem.cart_quantity ,
+                cartItem.image ,
+                order.title ,
+                order.order_datetime ,
+                order.sub_total_amount ,
+                order.shipping_charge ,
+                order.total_amount ,
+                order.address
+            )
+            val documentReference = mFireStore.collection(Constants.SOLD_PRODUCTS)
+                .document(cartItem.product_id)
+
+            writeBatch.set(documentReference , soldProduct)
+        }
+
+        for (cartIem in cartList) {
+
+            val documentReference = mFireStore.collection(Constants.CART_ITEMS)
+                .document(cartIem.id)
+            writeBatch.delete(documentReference)
+        }
+
+        writeBatch.commit() .addOnSuccessListener {
+            activity.allDetailsUpdatedSuccessfully()
+        } .addOnFailureListener { exception ->
+            activity.hideProgressDialog()
+            Log.e(javaClass.simpleName , exception.message , exception)
+
+        }
+    }
+
+    fun getMyOrdersList(fragment : OrdersFragment){
+        mFireStore.collection(Constants.ORDERS)
+            .whereEqualTo(Constants.USER_ID , getCurrentUserID())
+            .get()
+            .addOnSuccessListener { document ->
+                fragment.hideProgressDialog()
+            val list : ArrayList<Order> = ArrayList()
+
+                for ( i in document.documents){
+                    val orderItem = i.toObject(Order::class.java)!!
+                    orderItem.id = i.id
+
+                    list.add(orderItem)
+
+                    fragment.populationOrdersListInUI(list)
+                }
+
+            }.addOnFailureListener { exception ->
+                fragment.hideProgressDialog()
+                Log.e(javaClass.simpleName , exception.message , exception)
+
+            }
+    }
 }

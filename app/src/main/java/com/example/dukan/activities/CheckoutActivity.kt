@@ -25,6 +25,7 @@ class CheckoutActivity : BaseActivity() {
     private lateinit var mCartItemsList: ArrayList<CartItem>
     private var  mSubTotal : Double = 0.0
     private var mTotalAmount : Double = 0.0
+    private lateinit var mOrderDetails : Order
 
 
 
@@ -127,7 +128,7 @@ class CheckoutActivity : BaseActivity() {
     private fun placeAnOrder() {
        showProgressDialog(resources.getString(R.string.please_wait))
         if (mAddressDetails != null) {
-            val order = Order(
+            mOrderDetails = Order(
                 fireStoreClass().getCurrentUserID(),
                 mCartItemsList,
                 mAddressDetails!!,
@@ -136,13 +137,20 @@ class CheckoutActivity : BaseActivity() {
                 mSubTotal.toString(),
                 "100.0",
                 mTotalAmount.toString(),
+                System.currentTimeMillis()
+
+
             )
 
-            fireStoreClass().placeOrder(this@CheckoutActivity , order = order)
+            fireStoreClass().placeOrder(this@CheckoutActivity , mOrderDetails)
         }
     }
 
         fun orderPlacedSuccess() {
+            fireStoreClass().updateAllDetails(this , mCartItemsList , mOrderDetails)
+    }
+
+    fun allDetailsUpdatedSuccessfully(){
         hideProgressDialog()
         Toast.makeText(this@CheckoutActivity , "Your order was placed successfully." , Toast.LENGTH_LONG).show()
 

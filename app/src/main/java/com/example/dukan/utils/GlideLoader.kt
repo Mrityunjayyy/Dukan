@@ -45,4 +45,17 @@ class GlideLoader (val context : Context){
         e.printStackTrace()
     }
     }
+
+
+    fun loadOrderPicture(image : Any  , imageView : ImageView) {
+        try {
+            Glide.with(context)
+                .load(image)
+                .centerCrop()
+                .placeholder(R.drawable.ic_no_image_found)
+                .into(imageView)
+        }catch(e: IOException) {
+            e.printStackTrace()
+        }
+    }
 }
