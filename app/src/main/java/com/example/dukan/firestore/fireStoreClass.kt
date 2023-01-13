@@ -2,6 +2,7 @@ package com.example.dukan.firestore
 
 import android.app.Activity
 import android.content.Context
+import android.content.LocusId
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.dukan.activities.*
 import com.example.dukan.fragments.DashboardFragment
 import com.example.dukan.fragments.ProductsFragment
+import com.example.dukan.models.Address
 import com.example.dukan.models.CartItem
 import com.example.dukan.models.Product
 import com.example.dukan.models.User
@@ -384,6 +386,75 @@ class fireStoreClass {
              }
              Log.e(javaClass.simpleName , exception.message , exception)
          }
+    }
+
+
+    fun addAddress(activity : AddEditAddressActivity , addressInfo : Address) {
+        mFireStore.collection(Constants.ADDRESSES).document()
+            .set(addressInfo , SetOptions.merge())
+            .addOnSuccessListener {
+                    activity.addUpdateAddressSuccess()
+            } .addOnFailureListener {  exception ->
+                activity.hideProgressDialog()
+
+                Log.e(activity.javaClass.simpleName , exception.message , exception)
+
+            }
+    }
+
+
+
+    fun getAllAddressList(activity : AddressListActivity){
+        mFireStore.collection(Constants.ADDRESSES)
+            .whereEqualTo(Constants.USER_ID , getCurrentUserID())
+            .get()
+            .addOnSuccessListener { document ->
+
+                Log.e("Addresses List" , document.documents.toString())
+                val addressList : ArrayList<Address> = ArrayList()
+
+                for(i in document.documents) {
+                    val address  = i.toObject(Address::class.java)
+                    address!!.id = i.id
+
+                    addressList.add(address)
+                }
+
+                activity. successAddressListsFromFireStore(addressList)
+
+            }.addOnFailureListener { exception ->
+
+                activity.hideProgressDialog()
+                Log.e(javaClass.simpleName , exception.message , exception)
+            }
+
+    }
+
+
+    fun updateAddress(activity : AddEditAddressActivity ,addressInfo : Address ,addressId: String) {
+        mFireStore.collection(Constants.ADDRESSES)
+            .document(addressId)
+            .set(addressInfo , SetOptions.merge())
+            .addOnSuccessListener {
+                activity.addUpdateAddressSuccess()
+            }.addOnFailureListener { exception ->
+                activity.hideProgressDialog()
+                Log.e(javaClass.simpleName , exception.message , exception)
+            }
+    }
+
+
+    fun deleteAddress(activity : AddressListActivity  ,addressId: String){
+        mFireStore.collection(Constants.ADDRESSES)
+            .document(addressId)
+            .delete()
+            .addOnSuccessListener {
+
+                activity.deleteAddressSuccess()
+            }.addOnFailureListener { exception ->
+                activity.hideProgressDialog()
+                Log.e(javaClass.simpleName , exception.message , exception)
+            }
     }
 
 }

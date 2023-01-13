@@ -9,6 +9,8 @@ import android.os.Handler
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.example.dukan.R
+import com.example.dukan.utils.Constants
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
@@ -36,11 +38,13 @@ class SplashActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         Handler().postDelayed(
             {
+
                 startActivity(Intent(this@SplashActivity , LoginActivity::class.java))
                 finish()
             },
-            1500
+            2500
         )
+
 
 //
 //        val typeFace : Typeface  = Typeface.createFromAsset(assets , "Montserrat-Bold.ttf")

@@ -1,5 +1,6 @@
 package com.example.dukan.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -9,6 +10,7 @@ import com.example.dukan.adapters.CartItemsListAdapter
 import com.example.dukan.firestore.fireStoreClass
 import com.example.dukan.models.CartItem
 import com.example.dukan.models.Product
+import com.example.dukan.utils.Constants
 import kotlinx.android.synthetic.main.activity_cart_list.*
 
 class CartListActivity : BaseActivity() {
@@ -21,6 +23,12 @@ class CartListActivity : BaseActivity() {
         setContentView(R.layout.activity_cart_list)
 
         setUpActionBar()
+
+        btn_checkout.setOnClickListener{
+             val intent  = Intent(this@CartListActivity , AddressListActivity::class.java)
+            intent.putExtra(Constants.EXTRA_SELECT_ADDRESS , true)
+            startActivity(intent)
+        }
     }
 
 

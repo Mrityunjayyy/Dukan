@@ -48,6 +48,16 @@ object Constants {
 
     const val CART_QUANTITY : String = "cart_quantity"
 
+    const val HOME: String = "Home"
+    const val OFFICE: String = "Office"
+    const val OTHER: String = "Other"
+
+    const val ADDRESSES : String = "addresses"
+
+    const val EXTRA_ADDRESS_DETAILS : String = "AddressDetails"
+    const val EXTRA_SELECT_ADDRESS : String = "extra_select_address"
+    const val ADD_ADDRESS_REQUEST_CODE : Int = 1211
+
 
 
 
