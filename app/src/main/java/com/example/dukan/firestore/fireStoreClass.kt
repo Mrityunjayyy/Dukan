@@ -10,6 +10,7 @@ import com.example.dukan.activities.*
 import com.example.dukan.fragments.DashboardFragment
 import com.example.dukan.fragments.OrdersFragment
 import com.example.dukan.fragments.ProductsFragment
+import com.example.dukan.fragments.SoldProductsFragment
 import com.example.dukan.models.*
 import com.example.dukan.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -547,4 +548,29 @@ class fireStoreClass {
 
             }
     }
+
+    fun getSoldProductsList(fragment : SoldProductsFragment) {
+        mFireStore.collection(Constants.SOLD_PRODUCTS)
+            .whereEqualTo(Constants.USER_ID , getCurrentUserID())
+            .get()
+            .addOnSuccessListener { document ->
+                val list : ArrayList<SoldProduct> = ArrayList()
+
+                for(i in document.documents) {
+                    val soldProduct = i.toObject(SoldProduct::class.java)!!
+                    soldProduct.id = i.id
+
+                    list.add(soldProduct)
+                }
+
+                fragment.successSoldProductLIst(list)
+
+            } .addOnFailureListener { exception ->
+            fragment.hideProgressDialog()
+            Log.e(javaClass.simpleName , exception.message , exception)
+
+        }
+    }
+
+
 }
