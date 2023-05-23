@@ -484,6 +484,19 @@ class fireStoreClass {
     fun updateAllDetails(activity : CheckoutActivity ,cartList : ArrayList<CartItem> , order : Order) {
         val writeBatch = mFireStore.batch()
 
+        for (cart in cartList) {
+
+            val productHashMap = HashMap<String, Any>()
+
+            productHashMap[Constants.STOCK_QUANTITY] =
+                (cart.stock_quantity.toInt() - cart.cart_quantity.toInt()).toString()
+
+            val documentReference = mFireStore.collection(Constants.PRODUCTS)
+                .document(cart.product_id)
+
+            writeBatch.update(documentReference, productHashMap)
+        }
+
         for ( cartItem in cartList) {
  //           val productHashMap = HashMap<String, Any>()
 
